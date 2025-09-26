@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dio-net-minimals-api", "dio-net-minimals-api.csproj", "{1E5EF2C7-5A48-6B59-75CF-D0B35FEF61ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E5EF2C7-5A48-6B59-75CF-D0B35FEF61ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E5EF2C7-5A48-6B59-75CF-D0B35FEF61ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E5EF2C7-5A48-6B59-75CF-D0B35FEF61ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E5EF2C7-5A48-6B59-75CF-D0B35FEF61ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7005883A-3CD9-465E-A535-BA8F18259C4C}
+	EndGlobalSection
+EndGlobal
