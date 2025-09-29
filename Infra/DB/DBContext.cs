@@ -12,6 +12,17 @@ public class DBContext : DbContext {
 
     public DbSet<Administrator> Administrators { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<Administrator>().HasData(
+            new Administrator {
+                Id = 1,
+                Email = "admin@test.com",
+                Password = "admin123",
+                Profile = "Adm"
+            }
+        );
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             var connectionString = _appSettingsConfig.GetConnectionString("MySqlConnection")?.ToString();
