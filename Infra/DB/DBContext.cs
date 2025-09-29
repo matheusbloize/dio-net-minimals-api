@@ -11,13 +11,14 @@ public class DBContext : DbContext {
     }
 
     public DbSet<Administrator> Administrators { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Administrator>().HasData(
             new Administrator {
                 Id = 1,
                 Email = "admin@test.com",
-                Password = "admin123",
+                Password = "admin1234",
                 Profile = "Adm"
             }
         );
