@@ -39,7 +39,33 @@ app.MapPost("/admin/login", ([FromBody] LoginDTO loginDTO, IAdministratorService
 #endregion
 
 #region Vehicles
+ValidationErrors validDTO(VehicleDTO vehicleDTO) {
+    var validation = new ValidationErrors {
+        Messages = []
+    };
+
+    if (string.IsNullOrEmpty(vehicleDTO.Name)) {
+        validation.Messages.Add("Name cannot be empty!");
+    }
+
+    if (string.IsNullOrEmpty(vehicleDTO.Make)) {
+        validation.Messages.Add("Make cannot be empty!");
+    }
+
+    if (vehicleDTO.Year < 1950) {
+        validation.Messages.Add("Vehicle too old!");
+    }
+
+    return validation;
+}
+
 app.MapPost("/vehicles", ([FromBody] VehicleDTO vehicleDTO, IVehicleService vehicleService) => {
+    var validation = validDTO(vehicleDTO);
+
+    if (validation.Messages.Count > 0) {
+        return Results.BadRequest(validation);
+    }
+
     var vehicle = new Vehicle {
         Name = vehicleDTO.Name,
         Make = vehicleDTO.Make,
@@ -68,6 +94,12 @@ app.MapPut("/vehicles/{id}", ([FromRoute] int id, [FromBody] VehicleDTO vehicleD
     var vehicle = vehicleService.FindById(id);
 
     if (vehicle == null) return Results.NotFound("Vehicle not found!");
+
+    var validation = validDTO(vehicleDTO);
+
+    if (validation.Messages.Count > 0) {
+        return Results.BadRequest(validation);
+    }
 
     vehicle.Name = vehicleDTO.Name;
     vehicle.Make = vehicleDTO.Make;
