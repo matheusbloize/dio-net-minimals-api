@@ -13,8 +13,31 @@ public class AdministratorService : IAdministratorService {
         _context = context;
     }
 
+    public List<Administrator> FindAll(int? page) {
+        var query = _context.Administrators.AsQueryable();
+
+        int itemsPerPage = 10;
+
+        if (page != null) {
+            query = query.Skip(((int)page - 1) * itemsPerPage).Take(itemsPerPage);
+        }
+
+        return [.. query];
+    }
+
     public Administrator? Login(LoginDTO loginDTO) {
         var adm = _context.Administrators.Where(a => a.Email == loginDTO.Email && a.Password == loginDTO.Password).FirstOrDefault();
         return adm;
+    }
+
+    public Administrator Save(Administrator admin) {
+        _context.Administrators.Add(admin);
+        _context.SaveChanges();
+
+        return admin;
+    }
+
+    public Administrator? FindById(int id) {
+        return _context.Administrators.Where(v => v.Id == id).FirstOrDefault();
     }
 }
