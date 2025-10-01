@@ -9,6 +9,7 @@ using dio_net_minimals_api.Domain.ModelViews;
 using dio_net_minimals_api.Domain.Services;
 using dio_net_minimals_api.Infra.DB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -81,6 +82,7 @@ string GenerateJwtToken(Administrator admin) {
     var claims = new List<Claim>() {
         new("Email", admin.Email),
         new("Profile", admin.Profile),
+        new(ClaimTypes.Role, admin.Profile),
     };
 
     var token = new JwtSecurityToken(
@@ -119,7 +121,7 @@ app.MapGet("/admin", ([FromQuery] int? page, IAdministratorService administrator
     }
 
     return Results.Ok(adminsView);
-}).RequireAuthorization().WithTags("Admin");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm" }).WithTags("Admin");
 
 app.MapGet("/admin/{id}", ([FromRoute] int id, IAdministratorService administratorService) => {
     var admin = administratorService.FindById(id);
@@ -131,7 +133,7 @@ app.MapGet("/admin/{id}", ([FromRoute] int id, IAdministratorService administrat
         Email = admin.Email,
         Profile = admin.Profile
     });
-}).RequireAuthorization().WithTags("Admin");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm" }).WithTags("Admin");
 
 app.MapPost("/admin", ([FromBody] AdminDTO adminDTO, IAdministratorService administratorService) => {
     var validation = new ValidationErrors {
@@ -164,7 +166,7 @@ app.MapPost("/admin", ([FromBody] AdminDTO adminDTO, IAdministratorService admin
         Email = admin.Email,
         Profile = admin.Profile
     });
-}).RequireAuthorization().WithTags("Admin");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm" }).WithTags("Admin");
 #endregion
 
 #region Vehicles
@@ -203,13 +205,13 @@ app.MapPost("/vehicles", ([FromBody] VehicleDTO vehicleDTO, IVehicleService vehi
     vehicleService.Save(vehicle);
 
     return Results.Created($"/vehicle/{vehicle.Id}", vehicle);
-}).RequireAuthorization().WithTags("Vehicles");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm, Editor" }).WithTags("Vehicles");
 
 app.MapGet("/vehicles", ([FromQuery] int? page, IVehicleService vehicleService) => {
     var vehicles = vehicleService.FindAll(page);
 
     return Results.Ok(vehicles);
-}).RequireAuthorization().WithTags("Vehicles");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm, Editor" }).WithTags("Vehicles");
 
 app.MapGet("/vehicles/{id}", ([FromRoute] int id, IVehicleService vehicleService) => {
     var vehicle = vehicleService.FindById(id);
@@ -217,7 +219,7 @@ app.MapGet("/vehicles/{id}", ([FromRoute] int id, IVehicleService vehicleService
     if (vehicle == null) return Results.NotFound("Vehicle not found!");
 
     return Results.Ok(vehicle);
-}).RequireAuthorization().WithTags("Vehicles");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm, Editor" }).WithTags("Vehicles");
 
 app.MapPut("/vehicles/{id}", ([FromRoute] int id, [FromBody] VehicleDTO vehicleDTO, IVehicleService vehicleService) => {
     var vehicle = vehicleService.FindById(id);
@@ -237,7 +239,7 @@ app.MapPut("/vehicles/{id}", ([FromRoute] int id, [FromBody] VehicleDTO vehicleD
     vehicleService.Update(vehicle);
 
     return Results.Ok(vehicle);
-}).RequireAuthorization().WithTags("Vehicles");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm" }).WithTags("Vehicles");
 
 app.MapDelete("/vehicles/{id}", ([FromRoute] int id, IVehicleService vehicleService) => {
     var vehicle = vehicleService.FindById(id);
@@ -247,7 +249,7 @@ app.MapDelete("/vehicles/{id}", ([FromRoute] int id, IVehicleService vehicleServ
     vehicleService.Delete(vehicle);
 
     return Results.Ok("Vehicle deleted!");
-}).RequireAuthorization().WithTags("Vehicles");
+}).RequireAuthorization().RequireAuthorization(new AuthorizeAttribute { Roles = "Adm" }).WithTags("Vehicles");
 #endregion
 
 #region App
