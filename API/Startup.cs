@@ -105,10 +105,10 @@ public class Startup {
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
                 var claims = new List<Claim>() {
-        new("Email", admin.Email),
-        new("Profile", admin.Profile),
-        new(ClaimTypes.Role, admin.Profile),
-    };
+                    new("Email", admin.Email),
+                    new("Profile", admin.Profile),
+                    new(ClaimTypes.Role, admin.Profile),
+                };
 
                 var token = new JwtSecurityToken(
                     claims: claims,
